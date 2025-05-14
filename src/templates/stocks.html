@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+    <h1 class="title">📦 Inventory Management: Stock & Seller Info</h1>
+
+    <!-- 🔹 Product Details Table (Stock List First) -->
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Discount (%)</th>
+                <th>Seller Name</th>
+                <th>Seller Contact</th>
+                <th>Actions</th> <!-- ✅ For Edit/Delete Buttons -->
+            </tr>
+        </thead>
+        <tbody id="productsTableBody">
+            <!-- Product data will be loaded dynamically here -->
+        </tbody>
+    </table>
+    <p id="loadingMessage" class="text-center text-gray-500 mt-4">Loading inventory...</p> <!-- ✅ Added loading state -->
+
+    
+
+    <script>
+        // ✅ Load inventory data dynamically
+        function loadInventory() {
+            fetch("http://127.0.0.1:8000/products/")
+                .then(response => {
+                    if (!response.ok) throw new Error(`❌ HTTP Error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("📦 Fetched products:", data);
+
+                    const tableBody = document.getElementById("productsTableBody");
+                    const loadingMessage = document.getElementById("loadingMessage");
+
+                    if (!tableBody) {
+                        console.error("❌ Error: productsTableBody not found in HTML");
+                        return;
+                    }
+
+                    loadingMessage.style.display = "none"; // ✅ Hide loading message
+                    tableBody.innerHTML = "";
+
+                    data.forEach(product => {
+                        const row = `
+                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td>${product.name}</td>
+                                <td>${product.category ?? "N/A"}</td>
+                                <td>$${parseFloat(product.price).toFixed(2)}</td>
+                                <td>${product.stock ?? 0}</td>
+                                <td>${product.discount_percentage ?? 0}%</td>
+                                <td>${product.seller_name ?? "Unknown"}</td>
+                                <td>${product.seller_contact ?? "N/A"}</td>
+                                <td>
+                                    <button class="bg-green-500 text-white py-1 px-3 rounded mr-2">Edit</button>
+                                    <button class="bg-red-500 text-white py-1 px-3 rounded">Delete</button>
+                                </td>
+                            </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error("❌ Error fetching inventory:", error));
+        }
+
+        // ✅ Load inventory when page loads
+        document.addEventListener("DOMContentLoaded", loadInventory);
+
+        // ✅ Handle "Add Product" Form Submission
+        document.getElementById("addProductForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const newProduct = {
+                name: document.getElementById("name").value,
+                category: document.getElementById("category").value,
+                price: parseFloat(document.getElementById("price").value),
+                stock: parseInt(document.getElementById("stock").value),
+                discount_percentage: parseInt(document.getElementById("discount_percentage").value),
+                seller_name: document.getElementById("seller_name").value,
+                seller_contact: document.getElementById("seller_contact").value
+            };
+
+            fetch("http://127.0.0.1:8000/products/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newProduct)
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error(`❌ HTTP Error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(() => {
+                    alert("✅ Product added successfully!");
+                    document.getElementById("addProductForm").reset();
+                    loadInventory(); // ✅ Reload inventory after adding a new product
+                })
+                .catch(error => {
+                    console.error("❌ Error:", error);
+                    alert("❌ Failed to add product. Please try again.");
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+/* 🌈 General Styles */
+.title {
+    font-size: 32px; /* ✅ Slightly larger for better emphasis */
+    font-weight: bold;
+    color: #0044cc; /* Deep blue to match theme */
+    text-align: center;
+    font-family: 'Poppins', sans-serif; /* ✅ Modern font */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+}
+
+/* 🎨 Background & Layout */
+body {
+    background: linear-gradient(to right, #D6E6F2, #A0C4FF); /* Soft pastel blue gradient */
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* 📌 Container & Section Styling */
+.container {
+    display: flex;
+    gap: 20px;
+    justify-content: center; /* ✅ Centered layout */
+    padding: 20px;
+    flex-wrap: wrap; /* ✅ Responsive */
+}
+
+.inventory-section, .form-section {
+    flex: 1;
+}
+
+/* 📌 Product Form */
+.add-new-product {
+    margin: auto;
+    width: 50%;
+    padding: 20px;
+    background-color: rgba(207, 232, 252, 0.9); /* ✅ Semi-transparent pastel blue */
+    border-radius: 12px;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 🎨 Inventory List */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(240, 248, 255, 0.9); /* ✅ Slight transparency */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background-color: #669BBC;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    background-color: rgba(240, 248, 255, 0.8);
+    border: 1px solid #669BBC;
+}
+
+/* 🖼 Stylish Inventory Cards */
+.card {
+    background: rgba(207, 232, 252, 0.85); /* ✅ Semi-transparent blue */
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 12px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.card h3 {
+    color: #333;
+    font-size: 20px;
+}
+
+/* ✨ Button Styling */
+button {
+    transition: 0.3s ease-in-out;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    margin: 6px;
+}
+
+.edit-btn {
+    background-color: #88C0D0;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #EF476F;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.85;
+    transform: scale(1.08); /* ✅ Slightly stronger hover effect */
+}
+
+/* 🛠 Form Styling */
+#addProductForm {
+    background-color: rgba(207, 232, 252, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+/* 🌟 Smooth Loading Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-in-out;
+}

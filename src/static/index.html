@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome & Chart.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+    <!-- Custom Styles & Favicon -->
+    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+
+<body class="bg-gray-100">
+    <header class="p-6 bg-white shadow">
+        <h1 class="text-3xl font-bold text-center">Inventory Management System Dashboard</h1>
+    </header>
+    
+    <main class="p-6">
+        <!-- ✅ Product Inventory -->
+        <section class="mb-8">
+            <h1 class="text-2xl font-bold mb-4">Product Inventory</h1>
+            <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Product Name</th>
+                        <th class="py-3 px-6 text-left">Price</th>
+                        <th class="py-3 px-6 text-left">Stock</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody" class="text-gray-600 text-sm font-light"></tbody>
+            </table>
+            <p id="loadingMessageProducts" class="text-center text-gray-500 mt-4">Loading products...</p>
+        </section>
+
+        <!-- ✅ Stock Table -->
+        <section class="mb-8">
+            <h1 class="text-2xl font-bold mb-4">Stock Details</h1>
+            <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Stock ID</th>
+                        <th class="py-3 px-6 text-left">Product Name</th>
+                        <th class="py-3 px-6 text-left">Quantity</th>
+                        <th class="py-3 px-6 text-left">Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody id="stockTableBody" class="text-gray-600 text-sm font-light"></tbody>
+            </table>
+            <p id="loadingMessageStock" class="text-center text-gray-500 mt-4">Loading stock data...</p>
+        </section>
+
+        <!-- ✅ Add Product Form -->
+        <section class="max-w-md bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4">Add New Product</h2>
+            <form id="addProductForm">
+                <input type="text" id="productName" placeholder="Product Name" required class="w-full p-2 border border-gray-300 rounded mb-2">
+                <input type="number" id="productPrice" placeholder="Price" step="0.01" required class="w-full p-2 border border-gray-300 rounded mb-2">
+                <input type="number" id="productStock" placeholder="Stock" required class="w-full p-2 border border-gray-300 rounded mb-2">
+                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Add Product</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // ✅ Load Products
+        function loadProducts() {
+            fetch("http://127.0.0.1:8000/products/")
+                .then(response => response.json())
+                .then(products => {
+                    const tableBody = document.getElementById("productsTableBody");
+                    document.getElementById("loadingMessageProducts").style.display = "none";
+
+                    if (!tableBody) {
+                        console.error("❌ Error: productsTableBody not found in HTML");
+                        return;
+                    }
+
+                    tableBody.innerHTML = ""; 
+                    products.forEach(product => {
+                        const row = `<tr>
+                            <td>${product.name}</td>
+                            <td>$${parseFloat(product.price).toFixed(2)}</td>
+                            <td>${product.stock ?? 0}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error("❌ Error fetching products:", error));
+        }
+
+        // ✅ Load Stock
+        function loadStock() {
+            fetch("http://127.0.0.1:8000/stocks/")
+                .then(response => response.json())
+                .then(stockData => {
+                    const stockTableBody = document.getElementById("stockTableBody");
+                    document.getElementById("loadingMessageStock").style.display = "none";
+
+                    if (!stockTableBody) {
+                        console.error("❌ Error: stockTableBody not found in HTML");
+                        return;
+                    }
+
+                    stockTableBody.innerHTML = ""; 
+                    stockData.forEach(stock => {
+                        const row = `<tr>
+                            <td>${stock.id}</td>
+                            <td>${stock.product_name}</td>
+                            <td>${stock.quantity}</td>
+                            <td>${stock.last_updated}</td>
+                        </tr>`;
+                        stockTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error("❌ Error fetching stock data:", error));
+        }
+
+        // ✅ Load data on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadProducts();
+            loadStock();
+        });
+    </script>
+
+</body>
+</html>
