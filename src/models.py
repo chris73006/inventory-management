@@ -21,4 +21,4 @@ class Stock(Base):
     quantity = Column(Integer, nullable=False)
     price_per_unit= Column(Float, nullable=False)
     last_updated = Column(DateTime, default=datetime.utcnow)  # ✅ Add this field
-#heheh
+#hehehjjjj
