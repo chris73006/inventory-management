@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float,ForeignKey
 from src.database import Base  # ✅ Fixed import path
-
+from datetime import datetime
+from sqlalchemy import DateTime
 class Product(Base):
     __tablename__ = "products"
     
@@ -16,6 +17,8 @@ class Stock(Base):
     __tablename__ = "stocks"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
+    product_name = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False)
     price_per_unit= Column(Float, nullable=False)
+    last_updated = Column(DateTime, default=datetime.utcnow)  # ✅ Add this field
+#heheh
